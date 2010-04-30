@@ -1,0 +1,17 @@
+{
+ "method":"init",
+ "params":
+  [
+   {
+    "order"   : 1,
+    "node"    : "node1@node1.boorad.local",
+    "options" : []
+   },
+   {
+    "order"   : 2,
+    "node"    : "node2@node2.boorad.local",
+    "options" : []
+   }
+  ],
+ "id":1
+}

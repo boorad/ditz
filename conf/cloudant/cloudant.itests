@@ -1,0 +1,33 @@
+{servers,
+ [
+  {'ditz1@node1.boorad.local',
+   [
+    {nodelist, [{1, 'node1@node1.boorad.local', "node1.boorad.local"},
+                {2, 'node2@node2.boorad.local', "node2.boorad.local"},
+                {3, 'node3@node3.boorad.local', "node3.boorad.local"},
+                {4, 'node4@node4.boorad.local', "node4.boorad.local"}]},
+    {options, [{base_dir, "/Users/brad/dev/erlang/dbcore/"},
+               {start_cmd, "{{base_dir}}rel/dbcore/bin/node {{nodenum}} {{nodename}}"},
+               {etc_dir, "rel/dbcore/etc/"},
+               {pid_dir, "/srv/run/couchdb/"},
+               {data_dir, "/srv/db{{nodenum}}"}]}
+   ]
+  }
+ ]
+}.
+{tests,
+ [
+  {test1, "cloudant test: start cluster, do some tests, shut cluster down",
+   [
+    {{cloudant, wipe, [data, all]}, equal, ok},
+    {{cloudant, wipe, [couch, all]}, equal, ok},
+    {{cloudant, wipe, [state, all]}, equal, ok},
+    {{cloudant, start_nodes, all}, equal, ok},
+    {{httpc, get, [2, "_cloudant/membership"]}, equal,
+     "{\"all_nodes\":[\"node2@node2.boorad.local\"],\"cluster_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\"],\"partitions\":[]}\n"
+     },
+    {{cloudant, stop_nodes, all}, equal, ok}
+   ]
+  }
+ ]
+}.
