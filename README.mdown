@@ -8,14 +8,12 @@ Introduction
 
 Ditz is written in Erlang, and runs on each of your distributed system's nodes.  Tests/Tasks are injected into one node by running ditz, and are carried out across the cluster.  Ditz was made to test Cloudant's distributed version of CouchDB, however, one of the design goals of ditz is to serve more than just Erlang distributed systems.  Hadoop comes to mind, and ditz may work nicely in conjunction with Todd Lipcon's [Gremlins][] application.
 
-[gremlins]: http://github.com/toddlipcon/gremlins.
+[gremlins]: http://github.com/toddlipcon/gremlins
 
 
 Download
 -----
-[http://github.com/boorad/ditz][github_ditz]
-
-  [github_ditz]: http://github.com/boorad/ditz
+[http://github.com/boorad/ditz](http://github.com/boorad/ditz)
 
 
 Install
@@ -34,9 +32,9 @@ The *.itests config file format is in flux now.  Watch this space, or use conf/c
 
 Run
 -----
-./ditz <itests file>
+    ./ditz <itests file>
 
 
 License
 -----
-Apache 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
