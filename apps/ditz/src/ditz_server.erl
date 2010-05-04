@@ -111,9 +111,12 @@ maybe_ok(Result) ->
     % some results that can also return ok
     RmNotFound = string:str(Result,"rm") > 0 andalso
         string:str(Result, "No such file or directory\n") > 0,
+    KillNotFound = string:str(Result,"kill") > 0 andalso
+        string:str(Result, "No such process\n") > 0,
 
     % final if
     if
     RmNotFound -> ok;
+    KillNotFound -> ok;
     true -> Result
     end.

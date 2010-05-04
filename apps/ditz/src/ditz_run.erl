@@ -15,6 +15,8 @@ run() ->
     Conf = code:priv_dir(ditz) ++ "/../../../conf", % hack
     run(Conf ++ "/cloudant/cloudant.itests").
 
+% run tests
+% assumes all servers have ditz running
 run(TestFile) ->
     % read setup/test file
     {ok, Setup} = file:consult(TestFile),
@@ -23,36 +25,26 @@ run(TestFile) ->
     Servers = proplists:get_value(servers, Setup),
     Tests = proplists:get_value(tests, Setup),
 
-    % start ditz servers, run tests, stop ditz servers
-    ok = start_servers(Servers),
-    %timer:sleep(1000), % let servers start up
-    run_tests(Tests, Servers),
-    ok = stop_servers(Servers).
+    % init ditz servers & run tests
+    ok = init_servers(Servers),
+    run_tests(Tests, Servers).
 
 
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
 
-start_servers([]) -> ok;
-start_servers([Server|Rest]) ->
-    start_server(Server),
-    start_servers(Rest).
+init_servers([]) -> ok;
+init_servers([Server|Rest]) ->
+    init_server(Server),
+    init_servers(Rest).
 
-start_server({Server, Setup}) ->
+init_server({Server, Setup}) ->
     pong = net_adm:ping(Server),
     NodeList = proplists:get_value(nodelist, Setup),
     ditz_server:nodelist(Server, NodeList),
     Options = proplists:get_value(options, Setup),
     ditz_server:options(Server, Options).
-
-stop_servers([]) -> ok;
-stop_servers([Server|Rest]) ->
-    stop_server(Server),
-    stop_servers(Rest).
-
-stop_server({Server, _Options}) ->
-    ditz_server:stop(Server).
 
 run_tests([], _Servers) -> ok;
 run_tests([Test|Rest], Servers) ->
