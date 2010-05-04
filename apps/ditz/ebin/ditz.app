@@ -9,6 +9,7 @@
       ditz_run,
       ditz_server,
       ditz_sup,
+      ditz_utils,
       mustache
    ]},
   {registered, []},

@@ -36,5 +36,5 @@ build_cmd({Server, Node}, CmdTemplate, OptionNames, CtxFun) ->
         mustache:render(OptionTemplate, CtxFun(Node))
     end, OptionNames),
     Cmd = io_lib:format(CmdTemplate, OptionValues),
-    %ditz_server:cmd(Server, Cmd).
-    ?debugFmt("~nCmd: ~s~n", [Cmd]).
+    ditz_server:cmd(Server, Cmd).
+    %?debugFmt("~nCmd: ~s~n", [Cmd]).
