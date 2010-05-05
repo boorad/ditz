@@ -1,0 +1,9 @@
+#!/bin/sh
+
+erl -name $1 \
+    -smp auto errlog_type error +K true \
+    -pa ./apps/ditz/ebin \
+    -pa ./apps/ibrowse/ebin \
+    -pa ./apps/tasks/ebin \
+    -setcookie ditz \
+    -eval "application:start(ditz),ditz:run(\"$2\"),application:stop(ditz)."
