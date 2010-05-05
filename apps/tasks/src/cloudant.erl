@@ -16,11 +16,11 @@ stop_nodes(all) ->
     ditz_utils:cmd_loop_thru("{{stop_cmd}}").
 
 wipe([data, all]) ->
-    ditz_utils:cmd_loop_thru("rm -rf {{data_dir}}/x*");
+    ditz_utils:cmd_loop_thru("rm -rf {{data_dir}}x*");
 wipe([state, all]) ->
-    ditz_utils:cmd_loop_thru("rm {{data_dir}}/membership.*");
+    ditz_utils:cmd_loop_thru("rm {{data_dir}}membership.*");
 wipe([couch, all]) ->
-    ditz_utils:cmd_loop_thru("rm {{data_dir}}/*.couch").
+    ditz_utils:cmd_loop_thru("rm {{data_dir}}*.couch").
 
 
 %%%===================================================================

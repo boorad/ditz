@@ -12,7 +12,7 @@
 %%%===================================================================
 
 run() ->
-    Conf = code:priv_dir(ditz) ++ "/../../../conf", % hack
+    Conf = code:priv_dir(ditz) ++ "/conf",
     run(Conf ++ "/cloudant/cloudant.itests").
 
 % run tests
