@@ -19,10 +19,12 @@ Download
 Install
 -----
 prereqs:
-* Erlang/OTP - R13B04 or higher
+ * Erlang/OTP - R13B04 or higher
 
 steps:
     ./rebar compile
+or
+    make
 
 
 Configure
@@ -32,8 +34,9 @@ The *.itests config file format is in flux now.  Watch this space, or use conf/c
 
 Run
 -----
-    ./ditz <itests file>
-
+    ./ditz <ditz node name> <itests file>
+example:
+    ./ditz ditz1@node1.boorad.local /Users/brad/dev/erlang/ditz/apps/ditz/priv/conf/cloudant/cloudant.itests
 
 License
 -----
