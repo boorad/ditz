@@ -46,8 +46,8 @@
 
     % assert membership has been initialized
     {{httpc, get, [4, "_cloudant/membership"]}, equal,
-                   "{\"all_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\"\"node4@node4.boorad.local\"],"
-                   "\"cluster_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\"\"node4@node4.boorad.local\"],"
+                   "{\"all_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\",\"node4@node4.boorad.local\"],"
+                   "\"cluster_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\",\"node4@node4.boorad.local\"],"
                    "\"partitions\":[]}\n"},
 
     % stop all cluster nodes
