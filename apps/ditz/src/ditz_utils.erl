@@ -1,4 +1,5 @@
 -module(ditz_utils).
+-author('brad@cloudant.com').
 
 -export([cmd_loop_thru/1, get_node/1, get_ctx/0, get_ctx/2]).
 

@@ -1,4 +1,5 @@
 -module(httpc).
+-author('brad@cloudant.com').
 
 -export([get/1, post/1]).
 

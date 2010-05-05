@@ -1,4 +1,5 @@
 -module(cloudant).
+-author('brad@cloudant.com').
 
 -export([start_nodes/1, stop_nodes/1, wipe/1]).
 
