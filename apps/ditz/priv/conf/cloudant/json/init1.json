@@ -11,6 +11,16 @@
     "order"   : 2,
     "node"    : "node2@node2.boorad.local",
     "options" : []
+   },
+   {
+    "order"   : 3,
+    "node"    : "node3@node3.boorad.local",
+    "options" : []
+   },
+   {
+    "order"   : 4,
+    "node"    : "node4@node4.boorad.local",
+    "options" : []
    }
   ],
  "id":1
