@@ -6,4 +6,4 @@ erl -name $1 \
     -pa ./apps/ibrowse/ebin \
     -pa ./apps/tasks/ebin \
     -setcookie ditz \
-    -eval "application:start(ditz),ditz:run(\"$2\"),application:stop(ditz)."
+    -eval "ditz:start_dev(),ditz:run(\"$2\"),ditz:stop()."
