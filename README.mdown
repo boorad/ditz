@@ -29,7 +29,7 @@ or
 
 Configure
 -----
-The *.itests config file format is in flux now.  Watch this space, or use conf/cloudant.itests as an example.
+The *.itests config file format is in flux now.  Watch this space, or use apps/ditz/priv/conf/cloudant.itests as an example.
 
 
 Run
