@@ -37,7 +37,7 @@
     % assert membership is in pre-init state (no init or joins yet)
     {{httpc, get, [2, "_cloudant/membership"]}, equal,
                    "{\"all_nodes\":[\"node2@node2.boorad.local\"],"
-                   "\"cluster_nodes\":[],\"partitions\":[]}\n"},
+                   "\"cluster_nodes\":[]}\n"},
 
     % initialize cluster
     {{httpc, post, [1, "_cloudant/membership",
@@ -47,8 +47,7 @@
     % assert membership has been initialized
     {{httpc, get, [4, "_cloudant/membership"]}, equal,
                    "{\"all_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\",\"node4@node4.boorad.local\"],"
-                   "\"cluster_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\",\"node4@node4.boorad.local\"],"
-                   "\"partitions\":[]}\n"},
+                   "\"cluster_nodes\":[\"node1@node1.boorad.local\",\"node2@node2.boorad.local\",\"node3@node3.boorad.local\",\"node4@node4.boorad.local\"]}\n"},
 
     % stop all cluster nodes
     {{cloudant, stop_nodes, all}, equal, ok},
