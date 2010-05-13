@@ -109,6 +109,7 @@ cmd_cleanup(Cmd) ->
 
 maybe_ok(Result) ->
     % some results that can also return ok
+    OkWithExtra = string:str(Result,"ok:") > 0,
     RmNotFound = string:str(Result,"rm") > 0 andalso
         string:str(Result, "No such file or directory\n") > 0,
     KillNotFound = string:str(Result,"kill") > 0 andalso
@@ -116,6 +117,7 @@ maybe_ok(Result) ->
 
     % final if
     if
+    OkWithExtra -> ok;
     RmNotFound -> ok;
     KillNotFound -> ok;
     true -> Result
