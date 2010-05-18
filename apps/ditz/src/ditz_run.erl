@@ -13,7 +13,7 @@
 
 run() ->
     Conf = code:priv_dir(ditz) ++ "/conf",
-    run(Conf ++ "/cloudant/cloudant.itests").
+    run(Conf ++ "/cloudant/cloudant.boorad.conf").
 
 % run tests
 % assumes all servers have ditz running
@@ -40,7 +40,10 @@ init_servers([Server|Rest]) ->
     init_servers(Rest).
 
 init_server({Server, Setup}) ->
-    pong = net_adm:ping(Server),
+    case net_adm:ping(Server) of
+    pong -> ok;
+    pang -> throw({error, {ping_error, Server}})
+    end,
     NodeList = proplists:get_value(nodelist, Setup),
     ditz_server:nodelist(Server, NodeList),
     Options = proplists:get_value(options, Setup),
