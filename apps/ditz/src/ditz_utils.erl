@@ -1,7 +1,8 @@
 -module(ditz_utils).
 -author('brad@cloudant.com').
 
--export([cmd_loop_thru/1, get_node/1, get_ctx/0, get_ctx/2]).
+-export([cmd_loop_thru/1, get_node/1, get_ctx/0, get_ctx/2, servers_nodes/0,
+         get_server_node/1, exec_cmd/2]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -18,9 +19,19 @@ cmd_loop_thru(CmdTemplate) ->
     Other -> Other
     end.
 
-get_node(Num) ->
+get_node(NodeNum) ->
     {ok, Nodes} = ditz_server:nodelist(),
-    lists:keyfind(Num, 1, Nodes).
+    lists:keyfind(NodeNum, 1, Nodes).
+
+get_server_node(NodeNum) ->
+    Servers = lists:append([node()], nodes()),
+    lists:flatmap(fun(Server) ->
+        {ok, NodeList} = ditz_server:nodelist(Server),
+        case lists:keyfind(NodeNum, 1, NodeList) of
+        false -> [];
+        Node -> [{Server, Node}]
+        end
+    end, Servers).
 
 get_ctx() ->
     get_ctx(node(), no_node).
@@ -28,11 +39,6 @@ get_ctx() ->
 get_ctx(Server, Node) ->
     List = lists:append([sys_ctx(), node_ctx(Node), conf_ctx(Server)]),
     render_ctx(List).
-
-
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================
 
 % get list of servers/nodes based on config file
 servers_nodes() ->
@@ -47,6 +53,11 @@ exec_cmd({Server, Node}, CmdTemplate) ->
     Ctx = get_ctx(Server, Node),
     Cmd = mustache:render(CmdTemplate, Ctx),
     ditz_server:cmd(Server, Cmd).
+
+
+%%%===================================================================
+%%% Internal functions
+%%%===================================================================
 
 % internal system context
 sys_ctx() ->

@@ -14,7 +14,12 @@ start_nodes(all) ->
     ditz_utils:cmd_loop_thru("{{start_cmd}}").
 
 stop_nodes(all) ->
-    ditz_utils:cmd_loop_thru("{{stop_cmd}}").
+    ditz_utils:cmd_loop_thru("{{stop_cmd}}");
+stop_nodes([]) -> ok;
+stop_nodes([NodeNum|Rest]) ->
+    [{Server,Node}] = ditz_utils:get_server_node(NodeNum),
+    ditz_utils:exec_cmd({Server,Node},"{{stop_cmd}}"),
+    stop_nodes(Rest).
 
 wipe([data, all]) ->
     ditz_utils:cmd_loop_thru("rm -rf {{data_dir}}x*");
