@@ -1,0 +1,13 @@
+{
+ % stop nodes if any are running
+ {{cloudant, stop_nodes, all}, equal, ok},
+
+ % wipe old cluster info
+ {{cloudant, wipe, [data, all]}, equal, ok},
+ {{cloudant, wipe, [couch, all]}, equal, ok},
+ {{cloudant, wipe, [state, all]}, equal, ok},
+
+ % start cluster nodes
+ {{cloudant, start_nodes, all}, equal, ok},
+ {{timer, sleep, 1000}, equal, ok}
+}

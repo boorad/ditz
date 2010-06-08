@@ -1,0 +1,7 @@
+{
+ % stop all cluster nodes
+ {{cloudant, stop_nodes, all}, equal, ok},
+
+ % for dev, and ending commas
+ {{timer, sleep, 1}, equal, ok}
+}
