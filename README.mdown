@@ -29,14 +29,14 @@ or
 
 Configure
 -----
-The *.itests config file format is in flux now.  Watch this space, or use apps/ditz/priv/conf/cloudant.itests as an example.
+The test file format is in flux now.  Watch this space, or use apps/ditz/priv/cloudant/* as an example.
 
 
 Run
 -----
-    ./ditz <ditz node name> <itests file>
+    ./ditz <ditz node name> <test system folder>
 example:
-    ./ditz ditz1@node1.boorad.local /Users/brad/dev/erlang/ditz/apps/ditz/priv/conf/cloudant/cloudant.itests
+    ./ditz ditz1@node1.boorad.local cloudant
 
 License
 -----
