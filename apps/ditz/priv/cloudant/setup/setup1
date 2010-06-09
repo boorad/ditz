@@ -1,4 +1,4 @@
-{
+[
  % stop nodes if any are running
  {{cloudant, stop_nodes, all}, equal, ok},
 
@@ -10,4 +10,4 @@
  % start cluster nodes
  {{cloudant, start_nodes, all}, equal, ok},
  {{timer, sleep, 1000}, equal, ok}
-}
+].
