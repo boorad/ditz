@@ -12,58 +12,93 @@
 %%%===================================================================
 
 run() ->
-    Conf = code:priv_dir(ditz) ++ "/conf",
-    run(Conf ++ "/cloudant/cloudant.boorad.conf").
+    % TODO: cloudant-only convenience, remove at some point
+    run("cloudant").
 
 % run tests
 % assumes all servers have ditz running
-run(TestFile) ->
-    % read setup/test file
-    {ok, Setup} = file:consult(TestFile),
+run(TestTopDir) ->
     io:format("~nditz starting...~n", []),
-    io:format("Tests file: ~p~n", [TestFile]),
-    Servers = proplists:get_value(servers, Setup),
-    Tests = proplists:get_value(tests, Setup),
-
-    % init ditz servers & run tests
-    ok = init_servers(Servers),
-    run_tests(Tests, Servers).
+    TopDir = check_path(code:priv_dir(ditz)) ++ TestTopDir ++ "/",
+    TestDir = TopDir ++ "tests/",
+    {ok, Filenames} = file:list_dir(TestDir),
+    Testfiles = [TestDir ++ Filename || Filename <- Filenames],
+    run_tests(TopDir, lists:sort(Testfiles)).
 
 
 %%%===================================================================
 %%% Internal Functions
 %%%===================================================================
 
+output_test(File, Name, Desc) ->
+    io:format("Test name: ~p~n", [Name]),
+    io:format("Test file: ~p~n", [File]),
+    io:format("Test desc: ~p~n", [Desc]).
+
 init_servers([]) -> ok;
 init_servers([Server|Rest]) ->
     init_server(Server),
     init_servers(Rest).
 
-init_server({Server, Setup}) ->
+init_server({Server, ServerConfig}) ->
     case net_adm:ping(Server) of
     pong -> ok;
     pang -> throw({error, {ping_error, Server}})
     end,
-    NodeList = proplists:get_value(nodelist, Setup),
+    NodeList = proplists:get_value(nodelist, ServerConfig),
     ditz_server:nodelist(Server, NodeList),
-    Options = proplists:get_value(options, Setup),
+    Options = proplists:get_value(options, ServerConfig),
     ditz_server:options(Server, Options).
 
-run_tests([], _Servers) -> ok;
-run_tests([Test|Rest], Servers) ->
-    {TestName, TestDesc, Tasks} = Test,
-    io:format("~nTest '~p' starting~n  ~s~n", [TestName, TestDesc]),
-    run_test(TestName, Tasks),
-    run_tests(Rest, Servers).
+run_tests(_TopDir, []) -> ok;
+run_tests(TopDir, [TestFile|Rest]) ->
+    % read test file
+    {ok, [Test]} = file:consult(TestFile),
+    {TestName, TestDesc, ConfigFile, Tasks0} = Test,
+    output_test(TestFile, TestName, TestDesc),
+    {ok, Config} = do_config(TopDir, ConfigFile),
+    {ok, Tasks} = setup_teardown(TopDir, Tasks0),
+    ok = run_test(Config, Tasks),
+    io:format("Test completed: ~p~n~n", [TestName]),
+    run_tests(TopDir, Rest).
 
-run_test(TestName, []) ->
-    io:format("Test '~p' completed.~n~n", [TestName]);
-run_test(TestName, [Task|Rest]) ->
-    io:format("Task: ~p~n", [Task]),
-    process_task(Task),
-    run_test(TestName, Rest).
+run_test(_Config, []) ->
+    ok;
+ run_test(Config, [Task|Rest]) ->
+     io:format("Task: ~p~n", [Task]),
+     process_task(Task),
+     run_test(Config, Rest).
 
 process_task({{M,F,A}, equal, Result}) ->
     ?assertEqual(Result, M:F(A));
 process_task({{M,F,A}, match, Result}) ->
     ?assertMatch(Result, M:F(A)).
+
+check_path(Dir) ->
+    case string:rchr(Dir, $/) == length(Dir) of
+    true -> Dir;
+    _ -> Dir ++ "/"
+    end.
+
+do_config(TopDir, File) when is_atom(File) ->
+    do_config(TopDir, atom_to_list(File));
+do_config(TopDir, File) ->
+    ConfigFile = TopDir ++ "config/" ++ File,
+    {ok, Config} = file:consult(ConfigFile),
+    Servers = proplists:get_value(servers, Config),
+    {init_servers(Servers), Config}.
+
+setup_teardown(Dir, Tasks0) ->
+    Tasks = lists:foldl(fun
+        ({setup, Setup}, Acc0) ->
+            expand_tasks(Dir, "setup", Setup, Acc0);
+        ({teardown, Teardown}, Acc0) ->
+            expand_tasks(Dir, "teardown", Teardown, Acc0);
+        (Task, Acc0) -> [Task | Acc0]
+    end, [], Tasks0),
+    {ok, lists:reverse(Tasks)}.
+
+expand_tasks(Dir, Type, File, Acc0) ->
+    Filename = io_lib:format("~s~s/~s", [Dir, Type, File]),
+    {ok, [Tasks0]} = file:consult(Filename),
+    lists:foldl(fun(T,Acc) -> [T|Acc] end, Acc0, Tasks0).

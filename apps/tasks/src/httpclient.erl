@@ -19,7 +19,6 @@ post([NodeNum, Uri, Payload]) ->
     {NodeNum, _NodeName, NodeHost} = ditz_utils:get_node(NodeNum),
     Url = NodeHost ++ Uri,
     Payload1 = render_payload(Payload),
-    ?debugFmt("~nPayload1: ~p~n", [Payload1]),
     case ibrowse:send_req(Url, [], post, Payload1) of
         {ok, "200", _Headers, Body} ->
             Body;

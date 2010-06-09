@@ -9,5 +9,5 @@
 
  % start cluster nodes
  {{cloudant, start_nodes, all}, equal, ok},
- {{timer, sleep, 1000}, equal, ok}
+ {{timer, sleep, 2000}, equal, ok}
 ].

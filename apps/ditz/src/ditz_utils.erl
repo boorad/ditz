@@ -62,8 +62,7 @@ exec_cmd({Server, Node}, CmdTemplate) ->
 % internal system context
 sys_ctx() ->
     [
-     {ditz_dir, code:priv_dir(ditz) ++ "/"},
-     {conf_dir, "{{ditz_dir}}conf/"}
+     {priv_dir, code:priv_dir(ditz)}
     ].
 
 %% conf context context (itests file options)
