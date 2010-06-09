@@ -3,7 +3,7 @@
   {vsn, "0.0.1"},
   {modules, [
       cloudant,
-      httpc
+      httpclient
    ]},
   {registered, []},
   {applications, [kernel,stdlib]},
