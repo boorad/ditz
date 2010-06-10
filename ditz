@@ -3,4 +3,8 @@
 DIR=$(cd ${0%/*} && pwd)
 #echo $DIR
 
-erl -pa $DIR/apps/**/ebin -name ditz -setcookie ditz
+erl -pa $DIR/apps/**/ebin \
+    -name ditz \
+    -setcookie ditz \
+    -detached \
+    -eval "ditz:start_dev()"
