@@ -112,8 +112,7 @@ maybe_ok(Result) ->
     OkWithExtra = string:str(Result,"ok:") > 0,
     RmNotFound = string:str(Result,"rm") > 0 andalso
         string:str(Result, "No such file or directory\n") > 0,
-    KillNotFound = string:str(Result,"kill") > 0 andalso
-        string:str(Result, "No such process\n") > 0,
+    KillNotFound = string:str(Result,"kill") > 0,
 
     % final if
     if
