@@ -1,9 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-erl -name $1 \
-    -smp auto errlog_type error +K true \
-    -pa ./apps/ditz/ebin \
-    -pa ./apps/ibrowse/ebin \
-    -pa ./apps/tasks/ebin \
-    -setcookie ditz \
-    -eval "ditz:start_dev(),ditz:run(\"$2\"),ditz:stop()."
+DIR=$(cd ${0%/*} && pwd)
+#echo $DIR
+
+erl -pa $DIR/apps/**/ebin -name ditz -setcookie ditz
