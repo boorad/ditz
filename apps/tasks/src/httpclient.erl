@@ -6,7 +6,7 @@
 -include_lib("eunit/include/eunit.hrl").
 
 get([NodeNum, Uri]) ->
-    {_Server, {NodeNum, _NodeName, NodeHost}} =
+    [{_Server, {NodeNum, _NodeName, NodeHost}}|_] =
         ditz_utils:get_server_node(NodeNum),
     Url = NodeHost ++ Uri,
     case ibrowse:send_req(Url, [], get) of
