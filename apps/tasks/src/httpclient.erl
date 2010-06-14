@@ -17,7 +17,8 @@ get(NodeNum, Uri) ->
     end.
 
 post(NodeNum, Uri, Payload) ->
-    {NodeNum, _NodeName, NodeHost} = ditz_utils:get_node(NodeNum),
+    [{_Server, {NodeNum, _NodeName, NodeHost}}|_] =
+        ditz_utils:get_server_node(NodeNum),
     Url = NodeHost ++ Uri,
     Payload1 = render_payload(Payload),
     case ibrowse:send_req(Url, [], post, Payload1) of
