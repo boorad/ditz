@@ -70,9 +70,13 @@ run_test(_Config, []) ->
      run_test(Config, Rest).
 
 process_task({{M,F,A}, equal, Result}) ->
-    ?assertEqual(Result, M:F(A));
+    ?assertEqual(Result, apply(M,F,A));
 process_task({{M,F,A}, match, Result}) ->
-    ?assertMatch(Result, M:F(A)).
+    ?assertMatch(Result, apply(M,F,A));
+process_task({{M,F,A}, same_elems, Result}) when is_list(Result) ->
+    Actual = apply(M,F,A),
+    true = is_list(Actual),
+    ?assertEqual(lists:sort(Actual), lists:sort(Result)).
 
 check_path(Dir) ->
     case string:rchr(Dir, $/) == length(Dir) of
