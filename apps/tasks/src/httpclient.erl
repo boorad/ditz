@@ -1,11 +1,11 @@
 -module(httpclient).
 -author('brad@cloudant.com').
 
--export([get/1, post/1]).
+-export([get/2, post/3]).
 
 -include_lib("eunit/include/eunit.hrl").
 
-get([NodeNum, Uri]) ->
+get(NodeNum, Uri) ->
     [{_Server, {NodeNum, _NodeName, NodeHost}}|_] =
         ditz_utils:get_server_node(NodeNum),
     Url = NodeHost ++ Uri,
@@ -16,7 +16,7 @@ get([NodeNum, Uri]) ->
             throw(Error)
     end.
 
-post([NodeNum, Uri, Payload]) ->
+post(NodeNum, Uri, Payload) ->
     {NodeNum, _NodeName, NodeHost} = ditz_utils:get_node(NodeNum),
     Url = NodeHost ++ Uri,
     Payload1 = render_payload(Payload),
