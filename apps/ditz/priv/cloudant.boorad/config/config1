@@ -1,6 +1,6 @@
 {servers,
  [
-  {'ditz1@node1.boorad.local',
+  {'ditz@boorad.local',
    [
     {nodelist, [{1,'node1@node1.boorad.local',"http://node1.boorad.local:5984/"},
                 {2,'node2@node2.boorad.local',"http://node2.boorad.local:5985/"},
@@ -11,7 +11,7 @@
                {etc_dir, "rel/dbcore/etc/"},
                {pid_dir, "/srv/run/couchdb/"},
                {data_dir, "/srv/db{{nodenum}}/"},
-               {json_dir, "{{priv_dir}}/cloudant/json"},
+               {json_dir, "{{priv_dir}}/cloudant.boorad/json"},
                {start_cmd, "{{base_dir}}rel/dbcore/bin/node {{nodenum}} "
                            "{{nodename}} &> /srv/log/node{{nodenum}}.log"},
                {stop_cmd, "kill `cat {{pid_dir}}couchdb{{nodenum}}.pid`"}
