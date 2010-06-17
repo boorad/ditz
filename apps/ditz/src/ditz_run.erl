@@ -13,7 +13,7 @@
 
 run() ->
     % TODO: cloudant-only convenience, remove at some point
-    run("cloudant").
+    run("cloudant.boorad").
 
 % run tests
 % assumes all servers have ditz running

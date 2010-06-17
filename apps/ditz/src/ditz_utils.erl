@@ -20,8 +20,8 @@ cmd_loop_thru(CmdTemplate) ->
     end.
 
 get_node(NodeNum) ->
-    {ok, Nodes} = ditz_server:nodelist(),
-    lists:keyfind(NodeNum, 1, Nodes).
+    [{_Server, {NodeNum, Node, _Opts}}] = get_server_node(NodeNum),
+    Node.
 
 get_server_node(NodeNum) ->
     Servers = lists:append([node()], nodes()),

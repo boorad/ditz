@@ -35,6 +35,8 @@
                   "@{{json_dir}}/replace1.json"]},
                   equal, "{\"result\":\"ok\",\"error\":null,\"id\":1}\n"},
 
+  {{cloudant, nodeup, [2, 4]}, equal, ok},
+
   % assert membership has replaced node
   {{httpclient, get, [2, "_cloudant/membership"]}, equal,
                  "{\"all_nodes\":["

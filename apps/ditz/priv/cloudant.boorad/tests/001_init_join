@@ -33,6 +33,9 @@
                   "@{{json_dir}}/join1.json"]},
                   equal, "{\"result\":\"ok\",\"error\":null,\"id\":1}\n"},
 
+  % wait for node to come up
+  {{cloudant, nodeup, [2, 4]}, equal, ok},
+
   % assert membership has added new node
   {{httpclient, get, [2, "_cloudant/membership"]}, equal,
                  "{\"all_nodes\":["
