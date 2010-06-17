@@ -1,0 +1,33 @@
+[
+ % stop nodes if any are running
+ {{cloudant, stop_nodes, [all]}, equal, ok},
+
+ % wipe old cluster info
+ {{cloudant, wipe, [data, all]}, equal, ok},
+ {{cloudant, wipe, [couch, all]}, equal, ok},
+ {{cloudant, wipe, [state, all]}, equal, ok},
+
+ % start cluster nodes
+ {{cloudant, start_nodes, [all]}, equal, ok},
+ {{timer, sleep, [2000]}, equal, ok},
+
+  % initialize cluster
+  {{httpclient, post, [1, "_cloudant/membership",
+                  "@{{json_dir}}/init_four_nodes.json"]},
+                  equal, "{\"result\":\"ok\",\"error\":null,\"id\":1}\n"},
+
+  % assert membership has been initialized
+  {{httpclient, get, [3, "_cloudant/membership"]}, equal,
+                 "{\"all_nodes\":["
+                 "\"node1@node1.boorad.local\","
+                 "\"node2@node2.boorad.local\","
+                 "\"node3@node3.boorad.local\","
+                 "\"node4@node4.boorad.local\""
+                 "],"
+                 "\"cluster_nodes\":["
+                 "\"node1@node1.boorad.local\","
+                 "\"node2@node2.boorad.local\","
+                 "\"node3@node3.boorad.local\","
+                 "\"node4@node4.boorad.local\""
+                 "]}\n"}
+].

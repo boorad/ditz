@@ -1,0 +1,10 @@
+{
+ test3,
+ "cloudant test: db ops",
+ config1,
+ [
+  {setup, setup_four_nodes},
+  {{httpclient, put, [1, "test_db"]}, equal, "{\"ok\":true}\n"},
+  {teardown, teardown1}
+ ]
+}.
