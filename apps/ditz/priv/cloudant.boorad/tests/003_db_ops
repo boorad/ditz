@@ -5,6 +5,10 @@
  [
   {setup, setup_four_nodes},
   {{httpclient, put, [1, "test_db"]}, equal, "{\"ok\":true}\n"},
+  {{cloudant, all_dbs_test, [2, present, "test_db"]}, equal, true},
+  {{httpclient, delete, [3, "test_db"]}, equal, "{\"ok\":true}\n"},
+  {{timer, sleep, [1000]}, equal, ok},
+  {{cloudant, all_dbs_test, [4, not_present, "test_db"]}, equal, true},
   {teardown, teardown1}
  ]
 }.

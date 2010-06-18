@@ -1,7 +1,7 @@
 -module(httpclient).
 -author('brad@cloudant.com').
 
--export([get/2, put/2, post/3]).
+-export([get/2, put/2, post/3, delete/2]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -40,6 +40,18 @@ post(NodeNum, Uri, Payload) ->
         Error ->
             throw(Error)
     end.
+
+delete(NodeNum, Uri) ->
+    [{_Server, {NodeNum, _NodeName, NodeHost}}|_] =
+        ditz_utils:get_server_node(NodeNum),
+    Url = NodeHost ++ Uri,
+    case ibrowse:send_req(Url, [], delete) of
+        {ok, "200", _Headers, Body} ->
+            Body;
+        Error ->
+            throw(Error)
+    end.
+
 
 
 %%%===================================================================

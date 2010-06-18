@@ -2,6 +2,7 @@
 -author('brad@cloudant.com').
 
 -export([start_nodes/1, stop_nodes/1, wipe/2, nodeup/2, nodeup/3]).
+-export([all_dbs_test/3]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -47,3 +48,19 @@ nodeup(ExistingNodeNum, NewNodeNum, Wait) ->
         io:format("~nWait: ~p~n", [Wait-250]),
         nodeup(ExistingNodeNum, NewNodeNum, Wait-250)
     end.
+
+all_dbs_test(NodeNum, TestType, DbName) when is_list(DbName) ->
+    all_dbs_test(NodeNum, TestType, list_to_binary(DbName));
+all_dbs_test(NodeNum, TestType, DbName) ->
+    Json = httpclient:get(NodeNum, "_all_dbs"),
+    Resp = mochijson2:decode(Json),
+    int_all_dbs_test(TestType, DbName, Resp).
+
+%%
+%% internal
+%%
+
+int_all_dbs_test(present, DbName, List) ->
+    lists:member(DbName, List);
+int_all_dbs_test(not_present, DbName, List) ->
+    (not lists:member(DbName, List)).
