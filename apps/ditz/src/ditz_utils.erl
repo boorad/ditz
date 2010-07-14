@@ -1,11 +1,13 @@
 -module(ditz_utils).
 -author('brad@cloudant.com').
 
--export([cmd_loop_thru/1, get_node/1, get_ctx/0, get_ctx/2, servers_nodes/0,
-         get_server_node/1, exec_cmd/2]).
+-export([cmd_loop_thru/1, get_node/1, get_ctx/0, get_ctx/1, get_ctx/2,
+         servers_nodes/0, get_server_node/1, exec_cmd/2]).
 
 -include_lib("eunit/include/eunit.hrl").
-
+-define(l2a(L), list_to_atom(L)).
+-define(a2l(A), atom_to_list(A)).
+-define(i2l(I), integer_to_list(I)).
 
 %% loops thru Servers & the Nodes on each Server, executing Cmd template, and
 %% filling in the values with Options
@@ -20,7 +22,7 @@ cmd_loop_thru(CmdTemplate) ->
     end.
 
 get_node(NodeNum) ->
-    [{_Server, {NodeNum, Node, _Opts}}] = get_server_node(NodeNum),
+    [{_Server, {NodeNum, Node, _Front, _Back}}] = get_server_node(NodeNum),
     Node.
 
 get_server_node(NodeNum) ->
@@ -34,7 +36,11 @@ get_server_node(NodeNum) ->
     end, Servers).
 
 get_ctx() ->
-    get_ctx(node(), no_node).
+    get_ctx(node(), all_nodes).
+
+get_ctx(NodeNum) when is_integer(NodeNum) ->
+    [{Server, Node}|_] = get_server_node(NodeNum),
+    get_ctx(Server, Node).
 
 get_ctx(Server, Node) ->
     List = lists:append([sys_ctx(), node_ctx(Node), conf_ctx(Server)]),
@@ -71,12 +77,18 @@ conf_ctx(Server) ->
     Options.
 
 % node-specific context
-node_ctx({NodeNum, NodeName, Host}) ->
+node_ctx(all_nodes) ->
+    lists:foldl(fun({_,{NodeNum,_,_,_} = Node}, AccIn) ->
+        Numbered = lists:map(fun({K,V}) ->
+            {?l2a(?a2l(K) ++ "_" ++ ?i2l(NodeNum)), V}
+        end, node_ctx(Node)),
+        lists:flatten(Numbered, AccIn)
+    end, [], servers_nodes());
+node_ctx({NodeNum, NodeName, Frontdoor, Backdoor}) ->
     [{nodenum, NodeNum},
      {nodename, NodeName},
-     {host, Host}];
-node_ctx(no_node) ->
-    [].
+     {frontdoor, Frontdoor},
+     {backdoor, Backdoor}].
 
 % traverse proplist, rendering templates with earlier-rendered context values
 % the list should have options in the following order: sys, node, conf

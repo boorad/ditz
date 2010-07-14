@@ -69,6 +69,8 @@ run_test(_Config, []) ->
      process_task(Task),
      run_test(Config, Rest).
 
+process_task({{M,F,A}, notest}) ->
+    apply(M,F,A);
 process_task({{M,F,A}, equal, Result}) ->
     ?assertEqual(Result, apply(M,F,A));
 process_task({{M,F,A}, match, Result}) ->
