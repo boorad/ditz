@@ -14,12 +14,5 @@
   {{httpclient, put, [back, 1, "nodes/{{nodename_2}}", "{}"]}, notest},
 
   % assert membership has been initialized
-  {{httpclient, get, [back, 1, "_membership"]}, equal,
-   {[{<<"all_nodes">>,
-      [<<"node1@node1.boorad.local">>,
-       <<"node2@node2.boorad.local">>]},
-     {<<"cluster_nodes">>,
-      [<<"node1@node1.boorad.local">>,
-       <<"node2@node2.boorad.local">>]}]}
-  }
+  {{cloudant, membership_test, 1, [1,2]}, equal, ok}
 ].

@@ -1,8 +1,0 @@
-{
- "method":"replace",
- "params":
-   [{"oldnode"         : "node1@node1.boorad.local"},
-    {"newnode_options" : []},
-    {"pingnode"        : "node3@node3.boorad.local"}],
- "id":1
-}
