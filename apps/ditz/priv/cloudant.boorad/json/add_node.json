@@ -1,7 +1,0 @@
-{
- "method":"add_node",
- "params": [
-  {"node": "node2@node2.boorad.local"}
- ],
- "id":1
-}
