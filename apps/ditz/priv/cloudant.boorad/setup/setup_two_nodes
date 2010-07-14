@@ -12,10 +12,14 @@
 
   % initialize cluster
   {{httpclient, put, [back, 1, "nodes/{{nodename_2}}", "{}"]}, notest},
-  {{httpclient, put, [back, 1, "nodes/{{nodename_3}}", "{}"]}, notest},
-  {{httpclient, put, [back, 1, "nodes/{{nodename_4}}", "{}"]}, notest},
 
   % assert membership has been initialized
-  {{cloudant, membership_test, [2, [1,2,3,4]]}, equal, ok}
-
+  {{httpclient, get, [back, 1, "_membership"]}, equal,
+   {[{<<"all_nodes">>,
+      [<<"node1@node1.boorad.local">>,
+       <<"node2@node2.boorad.local">>]},
+     {<<"cluster_nodes">>,
+      [<<"node1@node1.boorad.local">>,
+       <<"node2@node2.boorad.local">>]}]}
+  }
 ].

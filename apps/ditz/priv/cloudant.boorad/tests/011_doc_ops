@@ -1,0 +1,14 @@
+{
+ test011,
+ "cloudant test: doc ops",
+ config1,
+ [
+  {setup, setup_4_test_db},
+
+  % create a document
+  {{httpclient, put, [4, "test_db/doc1", {[{"_id",doc1},{"a",1},{b,1}]}]},
+   equal, ok},
+
+  {teardown, teardown_test_db}
+ ]
+}.

@@ -1,0 +1,14 @@
+[
+ % delete db
+ {{httpclient, delete, [3, "test_db"]}, equal, {[{<<"ok">>,true}]}},
+
+ % test that db is gone from dbs db
+ %{{timer, sleep, [1000]}, equal, ok},
+ {{cloudant, all_dbs_test, [4, not_present, <<"test_db">>]}, equal, true},
+
+ % stop all cluster nodes
+ {{cloudant, stop_nodes, [all]}, equal, ok},
+
+ % for dev, and ending commas
+ {{timer, sleep, [1]}, equal, ok}
+].

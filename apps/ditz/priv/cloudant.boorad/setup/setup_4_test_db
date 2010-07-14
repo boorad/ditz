@@ -1,0 +1,27 @@
+[
+ % stop nodes if any are running
+ {{cloudant, stop_nodes, [all]}, equal, ok},
+
+ % wipe old cluster info
+ {{cloudant, wipe, [data, all]}, equal, ok},
+ {{cloudant, wipe, [couch, all]}, equal, ok},
+
+ % start cluster nodes
+ {{cloudant, start_nodes, [all]}, equal, ok},
+ {{timer, sleep, [2000]}, equal, ok},
+
+ % initialize cluster
+ {{httpclient, put, [back, 1, "nodes/{{nodename_2}}", "{}"]}, notest},
+ {{httpclient, put, [back, 1, "nodes/{{nodename_3}}", "{}"]}, notest},
+ {{httpclient, put, [back, 1, "nodes/{{nodename_4}}", "{}"]}, notest},
+
+ % assert membership has been initialized
+ {{cloudant, membership_test, [1, [1,2,3,4]]}, equal, ok},
+
+ % create db
+ {{httpclient, put, [1, "test_db"]}, equal, {[{<<"ok">>,true}]}},
+
+ % test that db is present in dbs db
+ {{cloudant, all_dbs_test, [1 , present, <<"test_db">>]}, equal, true}
+
+].
