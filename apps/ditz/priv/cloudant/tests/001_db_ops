@@ -1,5 +1,5 @@
 {
- test3,
+ db_ops,
  "cloudant test: db ops",
  config1,
  [

@@ -1,7 +1,7 @@
 -module(httpclient).
 -author('brad@cloudant.com').
 
--export([get/2, get/3, put/2, put/3, put/4, post/3, delete/2]).
+-export([get/2, get/3, put/2, put/3, put/4, post/3, delete/2, delete/3]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -108,7 +108,8 @@ int_put(Host, Uri, Payload) ->
     mochijson2:decode(Raw).
 
 int_post(Host, Uri, Payload) ->
-    Url = Host ++ Uri,
+    Ctx = ditz_utils:get_ctx(),
+    Url = mustache:render(Host ++ Uri, Ctx),
     Payload1 = render_payload(Payload),
     case ibrowse:send_req(Url, [], post, Payload1) of
         {ok, "200", _Headers, Body} ->
@@ -118,7 +119,8 @@ int_post(Host, Uri, Payload) ->
     end.
 
 int_delete(Host, Uri) ->
-    Url = Host ++ Uri,
+    Ctx = ditz_utils:get_ctx(),
+    Url = mustache:render(Host ++ Uri, Ctx),
     Raw = case ibrowse:send_req(Url, [], delete) of
         {ok, "200", _Headers, Body} ->
             Body;

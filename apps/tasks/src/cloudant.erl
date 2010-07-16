@@ -13,10 +13,19 @@
 %%%===================================================================
 
 start_nodes(all) ->
-    ditz_utils:cmd_loop_thru("{{start_cmd}}").
+    ditz_utils:cmd_loop_thru("{{start_cmd}}");
+start_nodes(NodeNum) when is_integer(NodeNum) ->
+    start_nodes([NodeNum]);
+start_nodes([]) -> ok;
+start_nodes([NodeNum|Rest]) ->
+    [{Server,Node}] = ditz_utils:get_server_node(NodeNum),
+    ditz_utils:exec_cmd({Server,Node},"{{start_cmd}}"),
+    start_nodes(Rest).
 
 stop_nodes(all) ->
     ditz_utils:cmd_loop_thru("{{stop_cmd}}");
+stop_nodes(NodeNum) when is_integer(NodeNum) ->
+    stop_nodes([NodeNum]);
 stop_nodes([]) -> ok;
 stop_nodes([NodeNum|Rest]) ->
     [{Server,Node}] = ditz_utils:get_server_node(NodeNum),
@@ -58,8 +67,8 @@ membership_test(NodeNum, NodeInts) ->
     {Json} = httpclient:get(back, NodeNum, "_membership"),
     ClusterNodesBin = proplists:get_value(<<"cluster_nodes">>, Json),
     ClusterNodes = lists:map(fun(Bin) -> ?b2a(Bin) end, ClusterNodesBin),
-    TargetNodes = target_nodes(NodeInts),
-    ?assertEqual(lists:sort(ClusterNodes), lists:sort(TargetNodes)).
+    ExpectedNodes = target_nodes(NodeInts),
+    ?assertEqual(lists:sort(ExpectedNodes), lists:sort(ClusterNodes)).
 
 %%
 %% internal
