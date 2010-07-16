@@ -1,0 +1,21 @@
+{
+ membership,
+ "cloudant test: membership",
+ config1,
+ [
+  {setup, setup_four_nodes},
+
+  % delete node 4    (hackish hard-coded rev)
+  {{httpclient, delete, [back, 1, "nodes/{{nodename_4}}?rev=1-967a00dff5e02add41819138abb3284d"]}, notest},
+
+  % restart node 2 (to trigger mem3_nodes:first_fold/3)
+  {{cloudant, stop_nodes, [2]}, equal, ok},
+  {{cloudant, start_nodes, [2]}, equal, ok},
+  {{timer, sleep, [1000]}, equal, ok},
+
+  % check restarted node 2, to see if node 4 is gone
+  {{cloudant, membership_test, [2, [1,2,3]]}, equal, ok},
+
+  {teardown, teardown1}
+ ]
+}.
