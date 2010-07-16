@@ -1,7 +1,7 @@
 -module(ditz).
 -author('brad@cloudant.com').
 
--export([start/0, start_dev/0, stop/0, restart/0, run/0, run/1]).
+-export([start/0, start_dev/0, stop/0, restart/0, run/0, run/1, run/2]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -27,5 +27,8 @@ restart() ->
 run() ->
     ditz_run:run().
 
-run(File) ->
-    ditz_run:run(File).
+run(Suite) ->
+    ditz_run:run(Suite).
+
+run(Suite, Pattern) ->
+    ditz_run:run(Suite, Pattern).

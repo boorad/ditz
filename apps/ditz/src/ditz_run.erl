@@ -1,7 +1,7 @@
 -module(ditz_run).
 -author('brad@cloudant.com').
 
--export([run/0, run/1]).
+-export([run/0, run/1, run/2]).
 
 -include_lib("eunit/include/eunit.hrl").
 
@@ -13,16 +13,32 @@
 
 run() ->
     % TODO: cloudant-only convenience, remove at some point
-    run("cloudant.boorad").
+    run("cloudant").
 
 % run tests
 % assumes all servers have ditz running
-run(TestTopDir) ->
+run(Suite) when is_atom(Suite) ->
+    run(atom_to_list(Suite));
+run(Suite) ->
+    run(Suite, "*").
+
+run(Suite, FilePattern) when is_atom(Suite) ->
+    run(atom_to_list(Suite), FilePattern);
+run(Suite, FilePattern) ->
     io:format("~nditz starting...~n", []),
-    TopDir = check_path(code:priv_dir(ditz)) ++ TestTopDir ++ "/",
+    TopDir = check_path(code:priv_dir(ditz)) ++ Suite ++ "/",
     TestDir = TopDir ++ "tests/",
     {ok, Filenames} = file:list_dir(TestDir),
-    Testfiles = [TestDir ++ Filename || Filename <- Filenames],
+    Testfiles = lists:foldl(fun(Filename, AccIn) ->
+        case FilePattern of
+        "*" -> [TestDir ++ Filename | AccIn];
+        Start ->
+            case string:str(Filename, Start) of
+            1 -> [TestDir ++ Filename | AccIn];
+            _ -> AccIn
+            end
+        end
+    end, [], Filenames),
     run_tests(TopDir, lists:sort(Testfiles)).
 
 
